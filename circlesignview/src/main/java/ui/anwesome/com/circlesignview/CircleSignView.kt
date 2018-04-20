@@ -4,6 +4,7 @@ package ui.anwesome.com.circlesignview
  * Created by anweshmishra on 20/04/18.
  */
 
+import android.app.Activity
 import android.view.*
 import android.content.*
 import android.graphics.*
@@ -139,6 +140,13 @@ class CircleSignView(ctx : Context) : View(ctx) {
             circleSign.startUpdating {
                 animator.start()
             }
+        }
+    }
+    companion object {
+        fun create(activity : Activity) : CircleSignView {
+            val view : CircleSignView = CircleSignView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
