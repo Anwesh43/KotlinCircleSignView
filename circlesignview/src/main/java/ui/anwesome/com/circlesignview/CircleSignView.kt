@@ -79,7 +79,7 @@ class CircleSignView(ctx : Context) : View(ctx) {
         }
     }
 
-    data class CircleSign (var i : Int = 0, private val state : State = State()) {
+    data class CircleSign (var i : Int , private val state : State = State()) {
 
         fun draw(canvas : Canvas, paint : Paint) {
             val w : Float = canvas.width.toFloat()
@@ -114,6 +114,29 @@ class CircleSignView(ctx : Context) : View(ctx) {
 
         fun startUpdating(startcb : () -> Unit) {
             state.startUpdating(startcb)
+        }
+    }
+
+    data class Renderer(var view : CircleSignView) {
+
+        private val animator : Animator = Animator(view)
+
+        private val circleSign : CircleSign = CircleSign(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(Color.parseColor("#212121"))
+            circleSign.draw(canvas, paint)
+            animator.animate {
+                circleSign.update {
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            circleSign.startUpdating {
+                animator.start()
+            }
         }
     }
 }
