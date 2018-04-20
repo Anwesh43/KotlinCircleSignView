@@ -15,8 +15,14 @@ class CircleSignView(ctx : Context) : View(ctx) {
 
     private val renderer : Renderer = Renderer(this)
 
+    var onCompleteListener : OnCompleteListener? = null
+
     override fun onDraw(canvas : Canvas) {
         renderer.render(canvas, paint)
+    }
+
+    fun addCompleteListener(onFinish: () -> Unit, onReset : () -> Unit) {
+        onCompleteListener = OnCompleteListener(onFinish, onReset)
     }
 
     override fun onTouchEvent(event : MotionEvent) : Boolean {
@@ -134,6 +140,10 @@ class CircleSignView(ctx : Context) : View(ctx) {
             animator.animate {
                 circleSign.update {
                     animator.stop()
+                    when(it) {
+                        0f -> view.onCompleteListener?.finishListener?.invoke()
+                        1f -> view.onCompleteListener?.resetListener?.invoke()
+                    }
                 }
             }
         }
@@ -151,4 +161,5 @@ class CircleSignView(ctx : Context) : View(ctx) {
             return view
         }
     }
+    data class OnCompleteListener (var finishListener : () -> Unit, var resetListener : () -> Unit)
 }
