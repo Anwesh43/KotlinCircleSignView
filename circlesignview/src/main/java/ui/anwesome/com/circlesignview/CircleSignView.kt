@@ -25,9 +25,9 @@ class CircleSignView(ctx : Context) : View(ctx) {
         return true
     }
 
-    data class State (var prevScale : Float = 0f, var dir : Float = 0f, var j : Int = 0) {
+    data class State (private var prevScale : Float = 0f, var dir : Float = 0f, var j : Int = 0) {
 
-        private val scales : Array<Float> = arrayOf(0f, 0f, 0f)
+        val scales : Array<Float> = arrayOf(0f, 0f, 0f)
 
         fun update(stopcb : (Float) -> Unit) {
             scales[j] += 0.1f * this.dir
@@ -50,7 +50,7 @@ class CircleSignView(ctx : Context) : View(ctx) {
         }
     }
 
-    data class Animator (var view : View, var animated : Boolean = false) {
+    data class Animator (private var view : View, private var animated : Boolean = false) {
 
         fun animate(updatecb : () -> Unit) {
             if (animated) {
@@ -76,6 +76,38 @@ class CircleSignView(ctx : Context) : View(ctx) {
             if (animated) {
                 animated = false
             }
+        }
+    }
+
+    data class CircleSign (var i : Int = 0, private val state : State = State()) {
+
+        fun draw(canvas : Canvas, paint : Paint) {
+            val w : Float = canvas.width.toFloat()
+            val h : Float = canvas.height.toFloat()
+            val r1 : Float = Math.min(w,h)/3
+            val r2 : Float = Math.min(w,h)/20
+            canvas.save()
+            canvas.translate(w/2, h/2)
+            for (i in 0..1) {
+                canvas.drawArc(RectF(-r1, -r1, r1, r1), 180f * i, 180f * state.scales[0], true, paint)
+            }
+            canvas.save()
+            canvas.rotate(180f * this.state.scales[4])
+            for(i in 0..1) {
+                canvas.drawCircle(0f, (r1/4) * (1 - 2 * i) * state.scales[2], r2 * this.state.scales[1], paint)
+            }
+            val x : Float = (r1/5) * state.scales[3]
+            canvas.drawLine(-x, 0f, x, 0f, paint)
+            canvas.restore()
+            canvas.restore()
+        }
+
+        fun update(stopcb : (Float) -> Unit) {
+            state.update(stopcb)
+        }
+
+        fun startUpdating(startcb : () -> Unit) {
+            state.startUpdating(startcb)
         }
     }
 }
