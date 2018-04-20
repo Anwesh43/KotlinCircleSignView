@@ -141,8 +141,8 @@ class CircleSignView(ctx : Context) : View(ctx) {
                 circleSign.update {
                     animator.stop()
                     when(it) {
-                        0f -> view.onCompleteListener?.finishListener?.invoke()
-                        1f -> view.onCompleteListener?.resetListener?.invoke()
+                        1f -> view.onCompleteListener?.finishListener?.invoke()
+                        0f -> view.onCompleteListener?.resetListener?.invoke()
                     }
                 }
             }
