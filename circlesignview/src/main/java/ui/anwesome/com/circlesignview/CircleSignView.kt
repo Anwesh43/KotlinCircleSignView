@@ -88,11 +88,17 @@ class CircleSignView(ctx : Context) : View(ctx) {
             val r2 : Float = Math.min(w,h)/20
             canvas.save()
             canvas.translate(w/2, h/2)
+            paint.style = Paint.Style.STROKE
+            paint.strokeWidth = Math.min(w, h)/60
+            paint.strokeCap = Paint.Cap.ROUND
+            paint.color = Color.parseColor("#e74c3c")
             for (i in 0..1) {
-                canvas.drawArc(RectF(-r1, -r1, r1, r1), 180f * i, 180f * state.scales[0], true, paint)
+                canvas.drawArc(RectF(-r1, -r1, r1, r1), 180f * i, 180f * state.scales[0], false, paint)
             }
             canvas.save()
             canvas.rotate(180f * this.state.scales[4])
+            paint.style = Paint.Style.FILL
+            paint.color = Color.parseColor("#2ecc71")
             for(i in 0..1) {
                 canvas.drawCircle(0f, (r1/4) * (1 - 2 * i) * state.scales[2], r2 * this.state.scales[1], paint)
             }
